@@ -46,8 +46,8 @@ function updateBonusProgress() {
 function updatePrices() {
   const clickBase = 50;
   const passiveBase = 100;
-  const clickCost = userData.upgrades.click === 0 ? clickBase : roundPrice(clickBase * Math.pow(1.25, userData.upgrades.click));
-  const passiveCost = userData.upgrades.passive === 0 ? passiveBase : roundPrice(passiveBase * Math.pow(1.25, userData.upgrades.passive));
+  const clickCost = userData.upgrades.click === 0 ? clickBase : roundPrice(clickBase * Math.pow(1.1, userData.upgrades.click));
+  const passiveCost = userData.upgrades.passive === 0 ? passiveBase : roundPrice(passiveBase * Math.pow(1.1, userData.upgrades.passive));
   document.getElementById("buyClickUpgrade").textContent = `${formatNumber(clickCost)} 💎`;
   document.getElementById("buyPassiveUpgrade").textContent = `${formatNumber(passiveCost)} 💎`;
 }
