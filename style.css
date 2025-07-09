@@ -1,0 +1,484 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f5f5f7;
+  margin: 0;
+  padding: 0;
+  color: #1a1a1a;
+}
+
+main {
+  padding: 40px 20px 100px 20px;
+  overflow-y: auto;
+}
+
+.page {
+  display: none;
+  flex-direction: column;
+}
+
+.page.active {
+  display: flex;
+}
+
+.page-header {
+  text-align: center;
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+.page-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.stats-container {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+  margin: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  font-size: 1rem;
+}
+
+.stat-label {
+  color: #8e8e93;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-weight: 600;
+  color: #1a1a1a;
+  font-variant-numeric: tabular-nums;
+}
+
+#clickCircle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007aff, #34aadc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  color: white;
+  cursor: pointer;
+  margin: 20px auto;
+  box-shadow: 0 10px 25px rgba(0, 122, 255, 0.3);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+#clickCircle:active {
+  transform: scale(0.95);
+  box-shadow: 0 5px 15px rgba(0, 122, 255, 0.2);
+}
+
+/* Shop */
+.shop-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.shop-item {
+  background: white;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.shop-item-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  margin-top: 8px;
+}
+
+.shop-item-desc {
+  font-size: 0.9rem;
+  color: #8e8e93;
+  margin-bottom: 12px;
+}
+
+.shop-item-btn {
+  background: #007aff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.shop-item-btn:hover {
+  background: #005fcc;
+}
+
+.shop-message {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 1rem;
+  color: #34c759;
+  transition: opacity 0.3s ease;
+}
+
+/* Bonuses */
+.bonus-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+}
+
+.bonus-item {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.bonus-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.bonus-item.selected {
+  border-color: #007aff;
+  background-color: rgba(0, 122, 255, 0.05);
+}
+
+/* Daily big bonus */
+.bonus-item.big {
+  font-size: 1.05rem;
+  background: #ffffff;
+  padding: 24px;
+  border: 2px dashed #007aff;
+  text-align: center;
+  margin-top: 32px;
+}
+
+.bonus-item .bonus-header {
+  background-color: #007aff;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+.bonus-item .bonus-desc {
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.claim-btn {
+  width: 100%;
+  background: #007aff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.claim-btn:disabled {
+  background: #a7a7aa;
+  cursor: not-allowed;
+}
+
+.claim-big {
+  margin-top: 12px;
+}
+
+.bonus-message {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 0.95rem;
+  color: #34c759;
+}
+
+.countdown {
+  margin-top: 8px;
+  font-weight: bold;
+  color: #ff3b30;
+}
+
+/* Stats */
+.stats-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.stats-title {
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #007aff;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.stats-label {
+  color: #8e8e93;
+}
+
+.stats-value {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Top */
+#topPlayers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 70vh;
+  overflow-y: auto;
+  margin-top: 30px;
+}
+
+.player-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.player-rank {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f5f5f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-right: 12px;
+}
+
+.player-name {
+  flex-grow: 1;
+  font-weight: 500;
+}
+
+.player-name.you {
+  font-weight: 900;
+  color: #007aff;
+}
+
+.player-amount {
+  font-weight: 600;
+  color: #007aff;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Navigation */
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: #ffffff;
+  display: flex;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+}
+
+nav button {
+  flex-grow: 1;
+  border: none;
+  background: transparent;
+  color: #8e8e93;
+  font-weight: 500;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  padding: 8px 0;
+  user-select: none;
+}
+
+nav button span.icon {
+  font-size: 22px;
+  margin-bottom: 4px;
+  transition: transform 0.2s ease;
+}
+
+nav button:hover:not(.active) {
+  color: #007aff;
+}
+
+nav button.active {
+  color: #007aff;
+}
+
+nav button.active span.icon {
+  transform: translateY(-5px);
+}
+
+
+
+.top-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.top-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.top-rank {
+  font-weight: 600;
+  color: #007aff;
+  width: 40px;
+  text-align: center;
+}
+
+.top-name {
+  flex: 1;
+  font-weight: 500;
+  color: #1a1a1a;
+  padding: 0 10px;
+}
+
+.top-coins {
+  font-weight: 600;
+  color: #34c759;
+  font-variant-numeric: tabular-nums;
+}
+
+.top-card.highlight {
+  border-color: #007aff;
+  background: rgba(0, 122, 255, 0.05);
+}
+
+.top-rank-num {
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: sub;
+  /* опускает чуть ниже baseline */
+  font-size: 0.95em;
+  color: #007aff;
+}
+
+/* Номер в топе чуть ниже */
+.top-name .top-rank-num {
+  vertical-align: sub;
+  position: relative;
+  top: -2.5px;
+}
+
+/* Пользователь выделяется в топе */
+.top-card.highlight {
+  border: 2px solid #007aff;
+  background-color: rgba(0, 122, 255, 0.05);
+}
+
+/* Кнопка Buy справа */
+.shop-item {
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.shop-item .shop-item-btn {
+  margin-left: 16px;
+  align-self: center;
+}
+
+/* Убрать выделение бонуса после просмотра */
+.bonus-item.selected {
+  border-color: #007aff;
+  background-color: rgba(0, 122, 255, 0.05);
+}
+
+.bonus-item.viewed {
+  border-color: transparent !important;
+  background-color: white !important;
+}
+
+
+.shop-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  gap: 16px;
+}
+
+.shop-item-content {
+  flex-grow: 1;
+}
+
+.shop-item-btn {
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.bonus-item.big {
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+.shop-item-btn:active {
+  background-color: #007aff;
+}
+
+.shop-item-btn {
+  transition: background-color 0.15s ease !important
+}
+
+.shop-item-btn.pressed {
+  background-color: #005fcc;
+}

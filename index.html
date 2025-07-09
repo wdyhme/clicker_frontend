@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Business Clicker</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="//libtl.com/sdk.js" data-zone="9522334" data-sdk="show_9522334"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <main>
+      <!-- Clicker Page -->
+      <section id="page-clicker" class="page active">
+        <div class="page-header">
+          <h1>💰 Clicker</h1>
+        </div>
+        <div id="clickCircle" role="button" tabindex="0">💰</div>
+        <div class="stats-container">
+          <div class="stat-row"><span class="stat-label">Balance:</span><span class="stat-value" id="balanceStat">0
+              🪙</span></div>
+          <div class="stat-row"><span class="stat-label">Per Click:</span><span class="stat-value" id="perClick">1
+              🪙</span></div>
+          <div class="stat-row"><span class="stat-label">Passive Income:</span><span class="stat-value"
+              id="passiveIncome">0 🪙/h</span></div>
+        </div>
+      </section>
+
+      <!-- Внутри секции Top Players -->
+      <section id="page-top" class="page">
+        <div class="page-header">
+          <h1>🏆 Top Players</h1>
+        </div>
+        <div id="topPlayers" role="list"></div>
+      </section>
+
+      <!-- Внутри секции Shop -->
+      <section id="page-shop" class="page">
+        <div class="page-header">
+          <h1>🛒 Shop</h1>
+        </div>
+        <div class="shop-items">
+          <div class="shop-item">
+            <div class="shop-item-content">
+              <div class="shop-item-title">Click Upgrade</div>
+              <div class="shop-item-desc">Increase income per click</div>
+            </div>
+            <button class="shop-item-btn" id="buyClickUpgrade"></button>
+          </div>
+          <div class="shop-item">
+            <div class="shop-item-content">
+              <div class="shop-item-title">Passive Income</div>
+              <div class="shop-item-desc">Increase passive income</div>
+            </div>
+            <button class="shop-item-btn" id="buyPassiveUpgrade"></button>
+          </div>
+        </div>
+        <div id="shopMsg" class="shop-message" role="alert"></div>
+      </section>
+
+
+      <!-- Bonuses -->
+      <section id="page-bonuses" class="page">
+        <div class="page-header">
+          <h1>🎁 Bonuses</h1>
+        </div>
+        <div class="bonus-items">
+          <div class="bonus-item" data-bonus="interstitial">🎬 Interstitial Ad - Earn 100 coins</div>
+          <div class="bonus-item" data-bonus="popup">💎 Popup Ad – Earn 100 coins</div>
+        </div>
+        <button id="claimBonusBtn" class="claim-btn" disabled>Claim Bonus</button>
+
+        <div class="bonus-item big" data-bonus="dailybig">
+          <div class="bonus-header">🔥 DAILY BIG BONUS</div>
+          <div class="bonus-desc">
+            👑 Watch any 100 advertisments 👑<br>💎 Earn 10 000 coins 💎
+          </div>
+          <button id="claimBigBonusBtn" class="claim-btn claim-big" disabled>Claim Daily Bonus (<span
+              id="bigBonusProgress">0/100</span>)</button>
+        </div>
+
+        <div id="bonusMsg" class="bonus-message" role="alert"></div>
+      </section>
+
+      <!-- Stats -->
+      <section id="page-stats" class="page">
+        <div class="page-header">
+          <h1>📊 Statistics</h1>
+        </div>
+        <span style="margin-top: 30px;"></span>
+        <div class="stats-card">
+          <div class="stats-title">Player Stats</div>
+          <div class="stats-row"><span class="stats-label">Total Earned:</span><span class="stats-value"
+              id="totalEarned">0 </span></div>
+          <div class="stats-row"><span class="stats-label">Total Clicks:</span><span class="stats-value"
+              id="totalClicks">0</span></div>
+          <div class="stats-row"><span class="stats-label">Click Upgrades:</span><span class="stats-value"
+              id="clickUpgrades">0</span></div>
+          <div class="stats-row"><span class="stats-label">Passive Upgrades:</span><span class="stats-value"
+              id="passiveUpgrades">0</span></div>
+        </div>
+
+        <div class="stats-card">
+          <div class="stats-title">Ads Watched</div>
+          <div class="stats-row"><span class="stats-label">Interstitial Today:</span><span class="stats-value"
+              id="shortToday">0</span></div>
+          <div class="stats-row"><span class="stats-label">Interstitial Total:</span><span class="stats-value"
+              id="shortTotal">0</span></div>
+          <div class="stats-row"><span class="stats-label">Popup Today:</span><span class="stats-value"
+              id="popupToday">0</span></div>
+          <div class="stats-row"><span class="stats-label">Popup Total:</span><span class="stats-value"
+              id="popupTotal">0</span></div>
+        </div>
+
+
+        <div class="stats-card">
+          <div class="stats-title">Global Stats</div>
+          <div class="stats-row"><span class="stats-label">Total Earned:</span><span class="stats-value" id="gEarned">0
+              🪙</span></div>
+          <div class="stats-row"><span class="stats-label">Total Clicks:</span><span class="stats-value"
+              id="gClicks">0</span></div>
+          <div class="stats-row"><span class="stats-label">Click Upgrades:</span><span class="stats-value"
+              id="gClickUp">0</span></div>
+          <div class="stats-row"><span class="stats-label">Passive Upgrades:</span><span class="stats-value"
+              id="gPassiveUp">0</span></div>
+          <div class="stats-row"><span class="stats-label">Users:</span><span class="stats-value" id="gUsers">0</span>
+          </div>
+        </div>
+
+
+        <div class="stats-card" style="margin-bottom: 100px">
+          <div class="stats-title">Global Ads</div>
+          <div class="stats-row"><span class="stats-label">Interstitial Today:</span><span class="stats-value"
+              id="gIntToday">0</span></div>
+          <div class="stats-row"><span class="stats-label">Interstitial Total:</span><span class="stats-value"
+              id="gIntTotal">0</span></div>
+          <div class="stats-row"><span class="stats-label">Popup Today:</span><span class="stats-value"
+              id="gPopToday">0</span></div>
+          <div class="stats-row"><span class="stats-label">Popup Total:</span><span class="stats-value"
+              id="gPopTotal">0</span></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Navigation -->
+    <nav role="navigation">
+      <button id="navClicker" class="active"><span class="icon">💰</span>Clicker</button>
+      <button id="navTop"><span class="icon">🏆</span>Top</button>
+      <button id="navShop"><span class="icon">🛒</span>Shop</button>
+      <button id="navBonuses"><span class="icon">🎁</span>Bonuses</button>
+      <button id="navStats"><span class="icon">📊</span>Stats</button>
+    </nav>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
