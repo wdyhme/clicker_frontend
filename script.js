@@ -19,7 +19,7 @@ function formatNumber(n) {
 
 
 function roundPrice(value) {
-  const increased = value * 1.25;
+  const increased = value * 1.10;
   const lastDigit = Math.floor(increased) % 10;
   const rounded = lastDigit <= 5 ? Math.floor(increased / 10) * 10 : Math.ceil(increased / 10) * 10;
   return Math.max(10, rounded);
