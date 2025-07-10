@@ -482,3 +482,38 @@ nav button.active span.icon {
 .shop-item-btn.pressed {
   background-color: #005fcc;
 }
+
+
+
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: #007aff;
+}
+
+.loader {
+  width: 40px;
+  height: 40px;
+  border: 5px solid #007aff;
+  border-top: 5px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
