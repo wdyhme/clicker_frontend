@@ -138,7 +138,7 @@ function resetDailyStatsIfNeeded() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-
+ await fetchUserData();  // Должно быть самым первым!
 
  
   document.getElementById("claimBigBonusBtn").addEventListener("click", () => {
