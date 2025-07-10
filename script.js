@@ -37,26 +37,11 @@ function updateUI() {
 
 function updateBonusProgress() {
   const el = document.getElementById("bigBonusProgress");
-  const claimBtn = document.getElementById("claimBigBonusBtn");
-  const watched = userData.adsWatchedToday || 0;
-
-  if (userData.dailyBigClaimedToday) {
-    el.textContent = "Claimed";
-    claimBtn.disabled = true;
-    claimBtn.textContent = "Claimed";
-  } else if (watched >= 100) {
-    el.textContent = "";
-    claimBtn.disabled = false;
-    claimBtn.textContent = "Claim Daily Bonus";
-    claimBtn.classList.add("active");
-  } else {
+  if (el) {
+    const watched = userData.adsWatchedToday || 0;
     el.textContent = `${watched}/100`;
-    claimBtn.disabled = true;
-    claimBtn.textContent = `Claim Daily Bonus (${watched}/100)`;
-    claimBtn.classList.remove("active");
   }
 }
-
 
 function updatePrices() {
   const clickBase = 50;
@@ -130,7 +115,6 @@ function resetDailyStatsIfNeeded() {
     userData.adsWatchedToday = 0;
     userData.ads_watched.interstitialToday = 0;
     userData.ads_watched.popupToday = 0;
-    userData.dailyBigClaimedToday = false; // ← вот это добавь
     saveUserData();
   }
 }
@@ -302,24 +286,6 @@ setInterval(() => {
       document.getElementById("claimBonusBtn").disabled = true;
     });
   });
-});
-
-
-document.getElementById("claimBigBonusBtn").addEventListener("click", () => {
-  if (userData.adsWatchedToday >= 100 && !userData.dailyBigClaimedToday) {
-    const reward = 500;
-    userData.balance += reward;
-    userData.totalEarned += reward;
-    userData.dailyBigClaimedToday = true;
-
-    const bonusMsg = document.getElementById("bonusMsg");
-    bonusMsg.textContent = `🎉 You earned +${reward} coins!`;
-    setTimeout(() => bonusMsg.textContent = "", 2000);
-
-    updateBonusProgress();
-    updateUI();
-    saveUserData();
-  }
 });
 
 async function loadTopPlayers() {
