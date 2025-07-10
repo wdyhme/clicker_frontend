@@ -139,7 +139,12 @@ function resetDailyStatsIfNeeded() {
 
 document.addEventListener("DOMContentLoaded", async () => {
  await fetchUserData();  // Должно быть самым первым!
+resetDailyStatsIfNeeded();
+  Telegram.WebApp.ready();
 
+  updateUI();
+  loadTopPlayers();
+  loadGlobalStats();
  
   document.getElementById("claimBigBonusBtn").addEventListener("click", () => {
     if (userData.adsWatchedToday >= 100 && !userData.bigBonusClaimed) {
