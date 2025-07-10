@@ -318,22 +318,26 @@ setInterval(() => {
     });
 
       // Обработчик большого бонуса — ПЕРЕМЕЩЁН НИЖЕ, после полной инициализации
+    // === Обработчик большого бонуса ===
   const bigBtn = document.getElementById("claimBigBonusBtn");
-  bigBtn.addEventListener("click", () => {
-    if (userData.adsWatchedToday >= 100 && !userData.bigBonusClaimed) {
-      userData.balance += 10000;
-      userData.totalEarned += 10000;
-      userData.bigBonusClaimed = true;
+  if (bigBtn) {
+    bigBtn.addEventListener("click", () => {
+      if (userData.adsWatchedToday >= 100 && !userData.bigBonusClaimed) {
+        userData.balance += 10000;
+        userData.totalEarned += 10000;
+        userData.bigBonusClaimed = true;
 
-      const msg = document.getElementById("bonusMsg");
-      msg.textContent = "🎉 You received 10,000 coins!";
-      setTimeout(() => msg.textContent = "", 3000);
+        const msg = document.getElementById("bonusMsg");
+        msg.textContent = "🎉 You received 10,000 coins!";
+        setTimeout(() => msg.textContent = "", 3000);
 
-      updateBonusProgress();
-      updateUI();
-      saveUserData();
-    }
-  });
+        updateBonusProgress();
+        updateUI();
+        saveUserData();
+      }
+    });
+  }
+
 
   
   
