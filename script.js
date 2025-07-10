@@ -1,4 +1,6 @@
+// === script.js (с нумерацией и отступом перед ником) ===
 const API_BASE_URL = "https://clicker-backend-0t8f.onrender.com/";
+
 let userData = {};
 let selectedBonus = null;
 
@@ -14,6 +16,7 @@ function getUserInfo() {
 function formatNumber(n) {
   return Math.floor(n).toLocaleString("en-US");
 }
+
 
 function roundPrice(value) {
   const increased = value * 1.10;
@@ -41,7 +44,6 @@ function updateBonusProgress() {
     el.textContent = "Claimed";
     claimBtn.disabled = true;
     claimBtn.textContent = "Claimed";
-    claimBtn.classList.remove("active");
   } else if (watched >= 100) {
     el.textContent = "";
     claimBtn.disabled = false;
@@ -54,6 +56,7 @@ function updateBonusProgress() {
     claimBtn.classList.remove("active");
   }
 }
+
 
 function updatePrices() {
   const clickBase = 50;
@@ -101,18 +104,21 @@ async function fetchUserData() {
   const tgUser = getUserInfo();
   const res = await fetch(`${API_BASE_URL}get_data?user_id=${String(tgUser.id)}&username=${tgUser.username}`);
   userData = await res.json();
-
+  // Пассивный доход при повторном входе
   const last = localStorage.getItem("lastPassiveTime");
   const now = Date.now();
+
   if (last && userData.passiveIncome > 0) {
     const diffMs = now - parseInt(last);
-    const earned = Math.floor(diffMs / 3600000 * userData.passiveIncome);
+    const earned = Math.floor(diffMs / 3600000 * userData.passiveIncome); // 1 час = 3600000 ms
     if (earned > 0) {
       userData.balance += earned;
       userData.totalEarned += earned;
     }
   }
+
   localStorage.setItem("lastPassiveTime", now.toString());
+
 }
 
 function resetDailyStatsIfNeeded() {
@@ -124,27 +130,96 @@ function resetDailyStatsIfNeeded() {
     userData.adsWatchedToday = 0;
     userData.ads_watched.interstitialToday = 0;
     userData.ads_watched.popupToday = 0;
-    userData.dailyBigClaimedToday = false;
+    userData.dailyBigClaimedToday = false; // ← вот это добавь
     saveUserData();
   }
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+
+
+  document.getElementById("buyClickUpgrade").addEventListener("click", () => {
+    const clickBase = 50;
+    const cost = userData.upgrades.click === 0 ? clickBase : roundPrice(clickBase * Math.pow(1.25, userData.upgrades.click));
+    if (userData.balance >= cost) {
+      userData.balance -= cost;
+      userData.perClick += 1;
+      userData.upgrades.click += 1;
+      const msg = document.getElementById("shopMsg");
+      msg.textContent = "✅ Upgrade purchased!";
+      setTimeout(() => msg.textContent = "", 2000);
+
+    } else {
+      const msg = document.getElementById("shopMsg");
+      msg.textContent = "❌ Not enough coins!";
+      setTimeout(() => msg.textContent = "", 2000);
+    }
+    updateUI();
+
+
+    document.querySelectorAll(".shop-item-btn").forEach(btn => {
+      btn.addEventListener("mousedown", () => {
+        btn.classList.add("pressed");
+      });
+      btn.addEventListener("mouseup", () => {
+        btn.classList.remove("pressed");
+      });
+      btn.addEventListener("mouseleave", () => {
+        btn.classList.remove("pressed");
+      });
+      btn.addEventListener("touchstart", () => {
+        btn.classList.add("pressed");
+      });
+      btn.addEventListener("touchend", () => {
+        btn.classList.remove("pressed");
+      });
+    });
+
+    saveUserData();
+
+    
+
+
+  });
+
+  document.getElementById("buyPassiveUpgrade").addEventListener("click", () => {
+    const passiveBase = 100;
+    const cost = userData.upgrades.passive === 0 ? passiveBase : roundPrice(passiveBase * Math.pow(1.25, userData.upgrades.passive));
+    if (userData.balance >= cost) {
+      userData.balance -= cost;
+      userData.passiveIncome += 1;
+      userData.upgrades.passive += 1;
+      const msg = document.getElementById("shopMsg");
+      msg.textContent = "✅ Upgrade purchased!";
+      setTimeout(() => msg.textContent = "", 2000);
+
+    } else {
+      const msg = document.getElementById("shopMsg");
+      msg.textContent = "❌ Not enough coins!";
+      setTimeout(() => msg.textContent = "", 2000);
+
+    }
+    updateUI();
+    saveUserData();
+  });
+
   await fetchUserData();
 
   document.getElementById("preloader")?.remove();
-
-  setInterval(() => {
-    if (userData?.passiveIncome > 0) {
-      const perSecond = userData.passiveIncome / 3600;
-      if (perSecond >= 1 || Math.random() < perSecond) {
-        userData.balance += 1;
-        userData.totalEarned += 1;
-        updateUI();
-        saveUserData();
-      }
+  // Пассивный доход начисляется каждую секунду
+setInterval(() => {
+  if (userData?.passiveIncome > 0) {
+    const perSecond = userData.passiveIncome / 3600;
+    if (perSecond >= 1 || Math.random() < perSecond) { // для дробных значений — псевдослучайно
+      userData.balance += 1;
+      userData.totalEarned += 1;
+      updateUI();
+      saveUserData();
     }
-  }, 1000);
+  }
+}, 1000);
+
+  
 
   Telegram.WebApp.ready();
   resetDailyStatsIfNeeded();
@@ -171,23 +246,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     saveUserData();
   });
 
-  const navMap = {
-    navClicker: "page-clicker",
-    navTop: "page-top",
-    navShop: "page-shop",
-    navBonuses: "page-bonuses",
-    navStats: "page-stats"
-  };
-  for (let [btnId, pageId] of Object.entries(navMap)) {
-    document.getElementById(btnId).onclick = () => {
-      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-      document.getElementById(pageId).classList.add("active");
-    };
+  function switchPage(id) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
   }
+  document.getElementById("navClicker").onclick = () => switchPage("page-clicker");
+  document.getElementById("navTop").onclick = () => switchPage("page-top");
+  document.getElementById("navShop").onclick = () => switchPage("page-shop");
+  document.getElementById("navBonuses").onclick = () => switchPage("page-bonuses");
+  document.getElementById("navStats").onclick = () => switchPage("page-stats");
 
   document.querySelectorAll(".bonus-item").forEach(el => {
     el.addEventListener("click", () => {
-      if (el.dataset.bonus === "dailybig") return;
+      if (el.dataset.bonus === "dailybig") return; // запрещаем выделение большого бонуса
       document.querySelectorAll(".bonus-item").forEach(i => i.classList.remove("selected"));
       el.classList.add("selected");
       selectedBonus = el.dataset.bonus;
@@ -195,87 +266,113 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  document.getElementById("claimBonusBtn").addEventListener("click", async () => {
-    if (!selectedBonus) return;
-    let adPromise = selectedBonus === "popup" ? show_9522334("pop") : show_9522334();
-    adPromise.then(() => {
-      const reward = 100;
-      userData.balance += reward;
-      userData.totalEarned += reward;
 
-      if (selectedBonus === "popup") {
-        userData.ads_watched.popupToday++;
-        userData.ads_watched.popupTotal++;
-      } else {
-        userData.ads_watched.interstitialToday++;
-        userData.ads_watched.interstitialTotal++;
-      }
+ document.getElementById("claimBonusBtn").addEventListener("click", async () => {
+  if (!selectedBonus) return;
+  let adPromise;
+  if (selectedBonus === "popup") adPromise = show_9522334("pop");
+  else if (selectedBonus === "interstitial") adPromise = show_9522334();
+  else return;
 
-      userData.adsWatchedToday++;
-      document.getElementById("bonusMsg").textContent = `🎉 You earned +${reward} coins!`;
-      setTimeout(() => document.getElementById("bonusMsg").textContent = "", 2000);
+  adPromise.then(() => {
+  const reward = 100;
+  userData.balance += reward;
+  userData.totalEarned += reward;
 
-      updateBonusProgress();
-      updateUI();
-      saveUserData();
-      selectedBonus = null;
-      document.getElementById("claimBonusBtn").disabled = true;
-      document.querySelectorAll(".bonus-item").forEach(i => i.classList.remove("selected"));
-    });
-  });
+  if (selectedBonus === "popup") {
+    userData.ads_watched.popupToday++;
+    userData.ads_watched.popupTotal++;
+  } else if (selectedBonus === "interstitial") {
+    userData.ads_watched.interstitialToday++;
+    userData.ads_watched.interstitialTotal++;
+  }
 
-  document.getElementById("claimBigBonusBtn").addEventListener("click", () => {
-    if (userData.adsWatchedToday >= 100 && !userData.dailyBigClaimedToday) {
-      const reward = 500;
-      userData.balance += reward;
-      userData.totalEarned += reward;
-      userData.dailyBigClaimedToday = true;
+  userData.adsWatchedToday++; // ← эта строка нужна обязательно
 
-      const msg = document.getElementById("bonusMsg");
-      msg.textContent = `🎉 You earned +${reward} coins!`;
-      setTimeout(() => msg.textContent = "", 2000);
+  const bonusMsg = document.getElementById("bonusMsg");
+  bonusMsg.textContent = `🎉 You earned +${reward} coins!`;
+  setTimeout(() => bonusMsg.textContent = "", 2000);
 
-      updateBonusProgress();
-      updateUI();
-      saveUserData();
-    }
-  });
+  updateBonusProgress();
+  selectedBonus = null;
+  document.getElementById("claimBonusBtn").disabled = true;
+  updateUI();
+  saveUserData();
 
-  document.getElementById("buyClickUpgrade").addEventListener("click", () => {
-    const base = 50;
-    const cost = userData.upgrades.click === 0 ? base : roundPrice(base * Math.pow(1.25, userData.upgrades.click));
-    const msg = document.getElementById("shopMsg");
-
-    if (userData.balance >= cost) {
-      userData.balance -= cost;
-      userData.perClick += 1;
-      userData.upgrades.click += 1;
-      msg.textContent = "✅ Upgrade purchased!";
-    } else {
-      msg.textContent = "❌ Not enough coins!";
-    }
-
-    setTimeout(() => msg.textContent = "", 2000);
-    updateUI();
-    saveUserData();
-  });
-
-  document.getElementById("buyPassiveUpgrade").addEventListener("click", () => {
-    const base = 100;
-    const cost = userData.upgrades.passive === 0 ? base : roundPrice(base * Math.pow(1.25, userData.upgrades.passive));
-    const msg = document.getElementById("shopMsg");
-
-    if (userData.balance >= cost) {
-      userData.balance -= cost;
-      userData.passiveIncome += 1;
-      userData.upgrades.passive += 1;
-      msg.textContent = "✅ Upgrade purchased!";
-    } else {
-      msg.textContent = "❌ Not enough coins!";
-    }
-
-    setTimeout(() => msg.textContent = "", 2000);
-    updateUI();
-    saveUserData();
-  });
+  document.querySelectorAll(".bonus-item").forEach(item => item.classList.remove("selected", "viewed"));
 });
+
+
+
+
+document.getElementById("claimBigBonusBtn").addEventListener("click", () => {
+  if (userData.adsWatchedToday >= 100 && !userData.dailyBigClaimedToday) {
+    const reward = 500;
+    userData.balance += reward;
+    userData.totalEarned += reward;
+    userData.dailyBigClaimedToday = true;
+
+    const bonusMsg = document.getElementById("bonusMsg");
+    bonusMsg.textContent = `🎉 You earned +${reward} coins!`;
+    setTimeout(() => bonusMsg.textContent = "", 2000);
+
+    updateBonusProgress();
+    updateUI();
+    saveUserData();
+  }
+});
+   });
+
+async function loadTopPlayers() {
+  const res = await fetch(`${API_BASE_URL}get_top_players`);
+  const top = await res.json();
+  const container = document.getElementById("topPlayers");
+  container.innerHTML = "";
+
+  const tgUser = getUserInfo();
+
+  top.forEach((player, index) => {
+    const isCurrentUser = player.nickname === tgUser.username;
+
+    const card = document.createElement("div");
+    card.className = "top-card";
+    if (isCurrentUser) card.classList.add("highlight");
+
+    const rank = document.createElement("span");
+    rank.className = "top-rank-num";
+    rank.textContent = `${index + 1}.`;
+
+    const name = document.createElement("span");
+    name.className = "top-username";
+    name.textContent = ` @${player.nickname}`;
+
+    const nameWrapper = document.createElement("div");
+    nameWrapper.className = "top-name";
+    nameWrapper.appendChild(rank);
+    nameWrapper.appendChild(name);
+
+    const coins = document.createElement("div");
+    coins.className = "top-coins";
+    const coinsValue = isCurrentUser ? userData.totalEarned : player.totalEarned;
+    coins.textContent = `${formatNumber(Math.floor(coinsValue))} 💎`;
+
+    card.appendChild(nameWrapper);
+    card.appendChild(coins);
+    container.appendChild(card);
+  });
+}
+
+
+async function loadGlobalStats() {
+  const res = await fetch(`${API_BASE_URL}get_global_stats`);
+  const stats = await res.json();
+  document.getElementById("gUsers").textContent = stats.users;
+  document.getElementById("gEarned").textContent = formatNumber(stats.totalEarned);
+  document.getElementById("gClicks").textContent = formatNumber(stats.totalClicks);
+  document.getElementById("gClickUp").textContent = stats.clickUpgrades;
+  document.getElementById("gPassiveUp").textContent = stats.passiveUpgrades;
+  document.getElementById("gIntToday").textContent = stats.ads.interstitialToday;
+  document.getElementById("gIntTotal").textContent = stats.ads.interstitialTotal;
+  document.getElementById("gPopToday").textContent = stats.ads.popupToday;
+  document.getElementById("gPopTotal").textContent = stats.ads.popupTotal;
+}
