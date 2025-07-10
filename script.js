@@ -226,7 +226,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     saveUserData();
   });
 
-  await fetchUserData();
+  
 
   document.getElementById("preloader")?.remove();
   // Пассивный доход начисляется каждую секунду
