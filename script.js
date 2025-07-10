@@ -275,36 +275,33 @@ setInterval(() => {
   else return;
 
   adPromise.then(() => {
-    const reward = 100;
-    userData.balance += reward;
-    userData.totalEarned += reward;
+  const reward = 100;
+  userData.balance += reward;
+  userData.totalEarned += reward;
 
-    if (selectedBonus === "popup") {
-      userData.ads_watched.popupToday++;
-      userData.ads_watched.popupTotal++;
-    } else if (selectedBonus === "interstitial") {
-      userData.ads_watched.interstitialToday++;
-      userData.ads_watched.interstitialTotal++;
-    }
+  if (selectedBonus === "popup") {
+    userData.ads_watched.popupToday++;
+    userData.ads_watched.popupTotal++;
+  } else if (selectedBonus === "interstitial") {
+    userData.ads_watched.interstitialToday++;
+    userData.ads_watched.interstitialTotal++;
+  }
 
-    // ✅ обязательно увеличиваем общий прогресс бонусов
-    userData.adsWatchedToday++;
-    userData.adsWatchedTotal++;
+  userData.adsWatchedToday++; // ← эта строка нужна обязательно
 
-    const bonusMsg = document.getElementById("bonusMsg");
-    bonusMsg.textContent = `🎉 You earned +${reward} coins!`;
-    setTimeout(() => bonusMsg.textContent = "", 2000);
+  const bonusMsg = document.getElementById("bonusMsg");
+  bonusMsg.textContent = `🎉 You earned +${reward} coins!`;
+  setTimeout(() => bonusMsg.textContent = "", 2000);
 
-    updateBonusProgress();
-    updateUI();
-    saveUserData();
+  updateBonusProgress();
+  selectedBonus = null;
+  document.getElementById("claimBonusBtn").disabled = true;
+  updateUI();
+  saveUserData();
 
-    // Сброс выбранного бонуса
-    document.querySelectorAll(".bonus-item").forEach(i => i.classList.remove("selected"));
-    selectedBonus = null;
-    document.getElementById("claimBonusBtn").disabled = true;
-  });
+  document.querySelectorAll(".bonus-item").forEach(item => item.classList.remove("selected", "viewed"));
 });
+
 
 
 
