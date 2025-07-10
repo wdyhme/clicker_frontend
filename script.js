@@ -36,12 +36,28 @@ function updateUI() {
 }
 
 function updateBonusProgress() {
-  const el = document.getElementById("bigBonusProgress");
-  if (el) {
-    const watched = userData.adsWatchedToday || 0;
-    el.textContent = `${watched}/100`;
+  const el = document.getElementById("claimBigBonusBtn");
+  const watched = userData.adsWatchedToday || 0;
+  const claimed = userData.bigBonusClaimed;
+
+  if (claimed) {
+    el.textContent = "Claimed";
+    el.disabled = true;
+    el.classList.remove("active");
+    return;
+  }
+
+  if (watched >= 100) {
+    el.textContent = "Claim Daily Bonus";
+    el.disabled = false;
+    el.classList.add("active");
+  } else {
+    el.innerHTML = `Claim Daily Bonus (<span id="bigBonusProgress">${watched}/100</span>)`;
+    el.disabled = true;
+    el.classList.remove("active");
   }
 }
+
 
 function updatePrices() {
   const clickBase = 50;
@@ -115,6 +131,8 @@ function resetDailyStatsIfNeeded() {
     userData.adsWatchedToday = 0;
     userData.ads_watched.interstitialToday = 0;
     userData.ads_watched.popupToday = 0;
+    userData.bigBonusClaimed = false;
+
     saveUserData();
   }
 }
@@ -286,6 +304,20 @@ setInterval(() => {
       document.getElementById("claimBonusBtn").disabled = true;
     });
   });
+  document.getElementById("claimBigBonusBtn").addEventListener("click", () => {
+  if (userData.adsWatchedToday >= 100 && !userData.bigBonusClaimed) {
+    userData.balance += 10000;
+    userData.totalEarned += 10000;
+    userData.bigBonusClaimed = true;
+    updateUI();
+    saveUserData();
+
+    const msg = document.getElementById("bonusMsg");
+    msg.textContent = "🎉 You received 10,000 coins!";
+    setTimeout(() => msg.textContent = "", 3000);
+  }
+});
+
 });
 
 async function loadTopPlayers() {
