@@ -523,3 +523,16 @@ nav button.active span.icon {
   color: white;
 }
 
+
+.bonus-item.big {
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+/* ДОБАВИТЬ — позволяет нажимать на кнопку внутри */
+.bonus-item.big button {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
