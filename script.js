@@ -126,11 +126,16 @@ async function fetchUserData() {
 }
 
 function resetDailyStatsIfNeeded() {
-  const today = new Date();
+  const now = new Date();
+  // смещение по времени GMT+3 (в миллисекундах)
+  const gmt3Offset = 3 * 60 * 60 * 1000;
+  const gmt3Date = new Date(now.getTime() + gmt3Offset);
+  const gmt3DateString = gmt3Date.toISOString().slice(0, 10); // YYYY-MM-DD в GMT+3
+
   const storedDate = localStorage.getItem("lastResetDate");
-  const nowDate = today.toISOString().slice(0, 10);
-  if (storedDate !== nowDate) {
-    localStorage.setItem("lastResetDate", nowDate);
+
+  if (storedDate !== gmt3DateString) {
+    localStorage.setItem("lastResetDate", gmt3DateString);
     userData.adsWatchedToday = 0;
     userData.ads_watched.interstitialToday = 0;
     userData.ads_watched.popupToday = 0;
@@ -139,6 +144,7 @@ function resetDailyStatsIfNeeded() {
     saveUserData();
   }
 }
+
 
 document.addEventListener("DOMContentLoaded", async () => {
  await fetchUserData();  // Должно быть самым первым!
