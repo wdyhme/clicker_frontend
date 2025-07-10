@@ -309,14 +309,17 @@ setInterval(() => {
     userData.balance += 10000;
     userData.totalEarned += 10000;
     userData.bigBonusClaimed = true;
-    updateUI();
-    saveUserData();
 
     const msg = document.getElementById("bonusMsg");
     msg.textContent = "🎉 You received 10,000 coins!";
     setTimeout(() => msg.textContent = "", 3000);
+
+    updateBonusProgress();
+    updateUI();
+    saveUserData();
   }
 });
+
 
 });
 
