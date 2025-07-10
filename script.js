@@ -140,6 +140,24 @@ function resetDailyStatsIfNeeded() {
 document.addEventListener("DOMContentLoaded", async () => {
 
 
+ 
+  document.getElementById("claimBigBonusBtn").addEventListener("click", () => {
+    if (userData.adsWatchedToday >= 100 && !userData.bigBonusClaimed) {
+      userData.balance += 10000;
+      userData.totalEarned += 10000;
+      userData.bigBonusClaimed = true;
+
+      const msg = document.getElementById("bonusMsg");
+      msg.textContent = "🎉 You received 10,000 coins!";
+      setTimeout(() => msg.textContent = "", 3000);
+
+      updateBonusProgress();
+      updateUI();
+      saveUserData();
+    }
+  });
+
+
   document.getElementById("buyClickUpgrade").addEventListener("click", () => {
     const clickBase = 50;
     const cost = userData.upgrades.click === 0 ? clickBase : roundPrice(clickBase * Math.pow(1.25, userData.upgrades.click));
@@ -158,19 +176,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     updateUI();
 
-      document.getElementById("claimBigBonusBtn").addEventListener("click", () => {
-    if (userData.adsWatchedToday >= 100 && !userData.bigBonusClaimed) {
-      userData.balance += 10000;
-      userData.totalEarned += 10000;
-      userData.bigBonusClaimed = true;
-      updateUI();
-      saveUserData();
-
-      const msg = document.getElementById("bonusMsg");
-      msg.textContent = "🎉 You received 10,000 coins!";
-      setTimeout(() => msg.textContent = "", 3000);
-    }
-  });
+      
 
 
 
@@ -319,21 +325,7 @@ setInterval(() => {
       document.getElementById("claimBonusBtn").disabled = true;
     });
   });
-  document.getElementById("claimBigBonusBtn").addEventListener("click", () => {
-  if (userData.adsWatchedToday >= 100 && !userData.bigBonusClaimed) {
-    userData.balance += 10000;
-    userData.totalEarned += 10000;
-    userData.bigBonusClaimed = true;
-
-    const msg = document.getElementById("bonusMsg");
-    msg.textContent = "🎉 You received 10,000 coins!";
-    setTimeout(() => msg.textContent = "", 3000);
-
-    updateBonusProgress();
-    updateUI();
-    saveUserData();
-  }
-});
+  
 
 
 });
