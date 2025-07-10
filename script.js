@@ -146,22 +146,7 @@ resetDailyStatsIfNeeded();
   loadTopPlayers();
   loadGlobalStats();
  
-  document.getElementById("claimBigBonusBtn").addEventListener("click", () => {
-    if (userData.adsWatchedToday >= 100 && !userData.bigBonusClaimed) {
-      userData.balance += 10000;
-      userData.totalEarned += 10000;
-      userData.bigBonusClaimed = true;
-
-      const msg = document.getElementById("bonusMsg");
-      msg.textContent = "🎉 You received 10,000 coins!";
-      setTimeout(() => msg.textContent = "", 3000);
-
-      updateBonusProgress();
-      updateUI();
-      saveUserData();
-    }
-  });
-
+  
 
   document.getElementById("buyClickUpgrade").addEventListener("click", () => {
     const clickBase = 50;
@@ -329,6 +314,25 @@ setInterval(() => {
       selectedBonus = null;
       document.getElementById("claimBonusBtn").disabled = true;
     });
+
+      // Обработчик большого бонуса — ПЕРЕМЕЩЁН НИЖЕ, после полной инициализации
+  const bigBtn = document.getElementById("claimBigBonusBtn");
+  bigBtn.addEventListener("click", () => {
+    if (userData.adsWatchedToday >= 100 && !userData.bigBonusClaimed) {
+      userData.balance += 10000;
+      userData.totalEarned += 10000;
+      userData.bigBonusClaimed = true;
+
+      const msg = document.getElementById("bonusMsg");
+      msg.textContent = "🎉 You received 10,000 coins!";
+      setTimeout(() => msg.textContent = "", 3000);
+
+      updateBonusProgress();
+      updateUI();
+      saveUserData();
+    }
+  });
+
   });
   
 
