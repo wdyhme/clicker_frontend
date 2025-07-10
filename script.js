@@ -40,17 +40,20 @@ function updateBonusProgress() {
   const watched = userData.adsWatchedToday || 0;
   const claimed = userData.bigBonusClaimed;
 
+ if (claimed) {
+  el.innerText = "Claimed";
   el.disabled = true;
   el.classList.remove("active");
-  el.textContent = `Claim Daily Bonus (${watched}/100)`;
+} else if (watched >= 100) {
+  el.innerText = "Claim Daily Bonus";
+  el.disabled = false;
+  el.classList.add("active");
+} else {
+  el.innerText = `Claim Daily Bonus (${watched}/100)`;
+  el.disabled = true;
+  el.classList.remove("active");
+}
 
-  if (claimed) {
-    el.textContent = "Claimed";
-  } else if (watched >= 100) {
-    el.textContent = "Claim Daily Bonus";
-    el.disabled = false;
-    el.classList.add("active");
-  }
 }
 
 
