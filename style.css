@@ -517,3 +517,9 @@ nav button.active span.icon {
     transform: rotate(360deg);
   }
 }
+
+.claim-btn.active {
+  background-color: #007aff;
+  color: white;
+}
+
