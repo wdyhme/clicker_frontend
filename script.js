@@ -109,6 +109,11 @@ async function fetchUserData() {
   const last = localStorage.getItem("lastPassiveTime");
   const now = Date.now();
 
+  if (!("bigBonusClaimed" in userData)) {
+  userData.bigBonusClaimed = false;
+}
+
+
   if (last && userData.passiveIncome > 0) {
     const diffMs = now - parseInt(last);
     const earned = Math.floor(diffMs / 3600000 * userData.passiveIncome); // 1 час = 3600000 ms
