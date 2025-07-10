@@ -188,6 +188,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   await fetchUserData();
+
+  document.getElementById("preloader")?.remove();
   // Пассивный доход начисляется каждую секунду
 setInterval(() => {
   if (userData?.passiveIncome > 0) {
@@ -200,6 +202,8 @@ setInterval(() => {
     }
   }
 }, 1000);
+
+  
 
   Telegram.WebApp.ready();
   resetDailyStatsIfNeeded();
