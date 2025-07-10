@@ -315,6 +315,8 @@ setInterval(() => {
       document.getElementById("claimBonusBtn").disabled = true;
     });
 
+    });
+
       // Обработчик большого бонуса — ПЕРЕМЕЩЁН НИЖЕ, после полной инициализации
   const bigBtn = document.getElementById("claimBigBonusBtn");
   bigBtn.addEventListener("click", () => {
@@ -333,7 +335,7 @@ setInterval(() => {
     }
   });
 
-  });
+  
   
 
 
