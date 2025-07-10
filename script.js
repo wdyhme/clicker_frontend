@@ -267,42 +267,42 @@ setInterval(() => {
   });
 
 
- document.getElementById("claimBonusBtn").addEventListener("click", async () => {
-  if (!selectedBonus) return;
-  let adPromise;
-  if (selectedBonus === "popup") adPromise = show_9522334("pop");
-  else if (selectedBonus === "interstitial") adPromise = show_9522334();
-  else return;
+  document.getElementById("claimBonusBtn").addEventListener("click", async () => {
+    if (!selectedBonus) return;
+    let adPromise;
+    if (selectedBonus === "popup") adPromise = show_9522334("pop");
+    else if (selectedBonus === "interstitial") adPromise = show_9522334();
+    else return;
 
-  adPromise.then(() => {
-  const reward = 100;
-  userData.balance += reward;
-  userData.totalEarned += reward;
+    adPromise.then(() => {
+      const reward = 100;
+      userData.balance += reward;
+      userData.totalEarned += reward;
+      if (selectedBonus === "popup") {
+        userData.ads_watched.popupToday++;
+        userData.ads_watched.popupTotal++;
+      } else if (selectedBonus === "interstitial") {
+        userData.ads_watched.interstitialToday++;
+        userData.ads_watched.interstitialTotal++;
+      }
+      userData.adsWatchedToday++;
+      userData.adsWatchedTotal++;
+      const bonusMsg = document.getElementById("bonusMsg");
+      bonusMsg.textContent = `🎉 You earned +${reward} coins!`;
+      setTimeout(() => bonusMsg.textContent = "", 2000);
 
-  if (selectedBonus === "popup") {
-    userData.ads_watched.popupToday++;
-    userData.ads_watched.popupTotal++;
-  } else if (selectedBonus === "interstitial") {
-    userData.ads_watched.interstitialToday++;
-    userData.ads_watched.interstitialTotal++;
-  }
+      updateBonusProgress();
+      selectedBonus = null;
+      document.getElementById("claimBonusBtn").disabled = true;
+      updateUI();
+      saveUserData();
 
-  userData.adsWatchedToday++; // ← эта строка нужна обязательно
-
-  const bonusMsg = document.getElementById("bonusMsg");
-  bonusMsg.textContent = `🎉 You earned +${reward} coins!`;
-  setTimeout(() => bonusMsg.textContent = "", 2000);
-
-  updateBonusProgress();
-  selectedBonus = null;
-  document.getElementById("claimBonusBtn").disabled = true;
-  updateUI();
-  saveUserData();
-
-  document.querySelectorAll(".bonus-item").forEach(item => item.classList.remove("selected", "viewed"));
+      document.querySelectorAll(".bonus-item").forEach(item => item.classList.remove("selected", "viewed"));
+      selectedBonus = null;
+      document.getElementById("claimBonusBtn").disabled = true;
+    });
+  });
 });
-
-
 
 
 document.getElementById("claimBigBonusBtn").addEventListener("click", () => {
@@ -321,7 +321,6 @@ document.getElementById("claimBigBonusBtn").addEventListener("click", () => {
     saveUserData();
   }
 });
-   });
 
 async function loadTopPlayers() {
   const res = await fetch(`${API_BASE_URL}get_top_players`);
